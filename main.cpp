@@ -11,8 +11,12 @@ ifstream fin_board("game_board.txt");
 ifstream fin_piece("pieces.txt");
 ofstream fout("db.txt");
 
-int game_board[4][3][3], pieces[4][4][3][3], pieces_positions[4], piece_orientation[4], fr[4], cnt;
+//typedef void *action();
+
+int game_board[4][3][3], pieces[4][4][3][3], pieces_positions[4], piece_orientation[4], fr[4], cnt, piece_to_move = -1, pieces_moved[4];
 int number_of_challanges;
+string current_screen = "menu", last_screen = "";
+bool game_lost = 0;
 vector<int> current_challange;
 vector<vector<int>> challanges;
 map <string, int> challanges_map;
@@ -123,8 +127,117 @@ void generate_challanges() {
     save_challanges_to_db();
 }
 
-void get_random_challange() {
+void get_challanges() {
     
+}
+
+void change_orientation0() {
+    piece_orientation[0] ++;
+    piece_orientation[0] %= 4;
+}
+
+void change_orientation1() {
+    piece_orientation[1] ++;
+    piece_orientation[1] %= 4;
+}
+
+void change_orientation2() {
+    piece_orientation[2] ++;
+    piece_orientation[2] %= 4;
+}
+
+void change_orientation3() {
+    piece_orientation[3] ++;
+    piece_orientation[3] %= 4;
+}
+
+void activate_move0() {
+    if(!pieces_moved[0])
+        piece_to_move = 0;
+}
+
+void activate_move1() {
+    if(!pieces_moved[0])
+        piece_to_move = 1;
+}
+
+void activate_move2() {
+    if(!pieces_moved[0])
+        piece_to_move = 2;
+}
+
+void activate_move3() {
+    if(!pieces_moved[0])
+        piece_to_move = 3;
+}
+
+void move0() {
+    pieces_positions[0] = piece_to_move;
+    pieces_moved[piece_to_move] = 1;
+    piece_to_move = -1;
+}
+
+void move1() {
+    pieces_positions[1] = piece_to_move;
+    pieces_moved[piece_to_move] = 1;
+    piece_to_move = -1;
+}
+
+void move2() {
+    pieces_positions[2] = piece_to_move;
+    pieces_moved[piece_to_move] = 1;
+    piece_to_move = -1;
+}
+
+void move3() {
+    pieces_positions[3] = piece_to_move;
+    pieces_moved[piece_to_move] = 1;
+    piece_to_move = -1;
+}
+
+void new_game() {
+
+}
+
+void to_menu() {
+
+}
+
+void show_lose_message() {
+
+}
+
+void show_menu() {
+
+}
+
+void show_game() {
+
+}
+
+void show_rules() {
+
+}
+
+void handle_buttons() {
+
+}
+
+void game_loop() {
+    while(true) {
+        handle_buttons();
+        if(last_screen != current_screen) {
+            if(current_screen == "menu")
+                show_menu();
+            if(current_screen == "game")
+                show_game();
+            if(current_screen == "rules")
+                show_rules();
+        }
+        if(current_screen == "game" && game_lost)
+            show_lose_message();
+
+    }
 }
 
 int main() {
