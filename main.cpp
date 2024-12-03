@@ -1,8 +1,10 @@
 #include <iostream> 
+#include <cstdlib>
 #include <vector>
 #include <algorithm>
 #include <fstream>
 #include <string>
+#include <ctime>
 #include <map>
 using namespace std;
 
@@ -17,6 +19,7 @@ int game_board[4][3][3], pieces[4][4][3][3], pieces_positions[4], piece_orientat
 int number_of_challanges;
 string current_screen = "menu", last_screen = "";
 bool game_lost = 0;
+string button_pressed = "";
 vector<int> current_challange;
 vector<vector<int>> challanges;
 map <string, int> challanges_map;
@@ -48,6 +51,7 @@ void gen_rotated_pieces() {
 }
 
 void init_game() {
+    srand(time(0));
     get_game_board();
     get_pieces();
     gen_rotated_pieces();
@@ -113,12 +117,13 @@ void backtracking(int k) {
 
 void save_challanges_to_db() {
     int l1 = challanges.size();
-    cout << l1 << endl;
+    fout << l1 << endl;
     for(int i = 0; i < l1; i ++) {
         int l2 = challanges[i].size();
-        cout << l2 << endl;
+        fout << l2 << endl;
         for(int k = 0; k < l2; k ++)
-            cout << challanges[i][k] << " ";
+            fout << challanges[i][k] << " ";
+        fout << endl;
     }
 }
 
@@ -128,7 +133,26 @@ void generate_challanges() {
 }
 
 void get_challanges() {
-    
+    challanges.clear();
+    fin >> number_of_challanges;
+    int n, m;
+    for(int i = 0; i < number_of_challanges; i ++) {
+        fin >> n;
+        vector<int> input;
+        for(int j = 0; j < n; j ++) {
+            fin >> m,
+            input.push_back(m);
+        }
+        challanges.push_back(input);
+    }
+}
+
+void get_random_challange() {
+    current_challange.clear();
+    int random_index = rand() % number_of_challanges;
+    int l = challanges[random_index].size();
+    for(int i = 0; i < l; i ++)
+        current_challange.push_back(challanges[random_index][i]);
 }
 
 void change_orientation0() {
@@ -241,5 +265,7 @@ void game_loop() {
 }
 
 int main() {
-    
+    init_game();
+    generate_challanges();
+    get_challanges();
 }
