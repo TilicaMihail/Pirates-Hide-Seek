@@ -1,4 +1,6 @@
 #include <iostream> 
+#include <graphics.h>
+#include <winbgim.h>
 #include <cstdlib>
 #include <vector>
 #include <algorithm>
@@ -7,6 +9,9 @@
 #include <ctime>
 #include <map>
 using namespace std;
+
+#define WINDOW_HEIGHT = 1000;
+#define WINDOW_WIDTH = 1900;
 
 ifstream fin("db.txt");
 ifstream fin_board("game_board.txt");
@@ -50,7 +55,7 @@ void gen_rotated_pieces() {
 
 }
 
-void init_game() {
+void get_game() {
     srand(time(0));
     get_game_board();
     get_pieces();
@@ -219,8 +224,78 @@ void move3() {
     piece_to_move = -1;
 }
 
-void new_game() {
+void draw_rounded_rect(int left, int top, int right, int bottom, int radius) {
+    arc(left + radius, top + radius, 180, 270, radius, radius);
+    arc(right - radius, top + radius, 270, 360, radius, radius);
+    arc(right - radius, bottom - radius, 0, 90, radius, radius);
+    arc(left + radius, bottom - radius, 90, 180, radius, radius);
+    line(left + radius, top, right - radius, top);
+    line(left + radius, bottom, right - radius, bottom);
+    line(left, top + radius, left, bottom - radius);
+    line(right, top + radius, right, bottom - radius);
+}
 
+void draw_button(int top_left_x, int top_left_y, int width, int height, int padding, string text_file_name) {
+    setfillstyle(1, 7);
+    draw_rounded_rect(top_left_x, top_left_y, top_left_x + width, top_left_y + height, 10);
+    floodfill(top_left_x + 1, top_left_y + 1, WHITE);
+    readimagefile(
+        text_file_name.c_str(), 
+        top_left_x + padding, 
+        top_left_y + padding, 
+        top_left_x + width - padding, 
+        top_left_y + height - padding
+    );
+}
+
+void draw_piece(int x, int y, int size, int piece) {
+
+}
+
+void draw_board(int x, int y, int size) {
+
+}
+
+void draw_challange_bar(int x, int y, int width, int height) {
+
+}
+
+void draw_pieces_bar(int x, int y, int size) {
+
+}
+
+void remove_image(int top_left_x, int top_left_y, int width, int height) {
+    // this does not remove the image but redraws the background on the spot that the image was in
+
+}
+
+void draw_background() {
+    readimagefile("background.jpg", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+}
+
+bool point_is_inside_box(int x, int y, int top_x, int top_y, int bot_x, int bot_y) {
+    return false;
+}
+
+void init_buttons() {
+
+}
+
+void init_game() {
+    get_game();
+    generate_challanges();
+    get_challanges();
+    initgraph(WINDOW_HEIGHT, WINDOW_WIDTH, "Pirates Hide & Seek");
+}
+
+void close_game() {
+    getch();
+    closegraph();
+}
+
+void new_game() {
+    get_random_challange();
+    current_screen = "game";
 }
 
 void to_menu() {
@@ -231,16 +306,27 @@ void show_lose_message() {
 
 }
 
-void show_menu() {
+void show_win_message() {
+    
+}
 
+void show_menu() {
+    cleardevice();
+    draw_background();
+    readimagefile("titlu.gif", WINDOW_WIDTH * 3 / 20, WINDOW_HEIGHT * 3 / 20, WINDOW_WIDTH * 6 / 20, WINDOW_HEIGHT * 17 / 20);
+    draw_button(WINDOW_WIDTH * 4 / 20, WINDOW_HEIGHT * 15 / 20, WINDOW_WIDTH * 5 / 20, WINDOW_HEIGHT * 2 / 20, 0, "butonJoaca.gif");
+    draw_button(WINDOW_WIDTH * 11 / 20, WINDOW_HEIGHT * 15 / 20, WINDOW_WIDTH * 5 / 20, WINDOW_HEIGHT * 2 / 20, 0, "butonReguli.gif");
 }
 
 void show_game() {
-
+    cleardevice();
+    draw_background();
 }
 
 void show_rules() {
-
+    cleardevice();
+    readimagefile("backgroundReguli.jpg", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    draw_button(WINDOW_WIDTH * 6 / 20, WINDOW_HEIGHT * 16 / 20, WINDOW_WIDTH * 14 / 20, WINDOW_HEIGHT * 18 / 20, 0, "butonIesire.gif");
 }
 
 void handle_buttons() {
@@ -257,6 +343,7 @@ void game_loop() {
                 show_game();
             if(current_screen == "rules")
                 show_rules();
+            last_screen = current_screen;
         }
         if(current_screen == "game" && game_lost)
             show_lose_message();
@@ -266,6 +353,6 @@ void game_loop() {
 
 int main() {
     init_game();
-    generate_challanges();
-    get_challanges();
+    game_loop();
+    close_game();
 }
